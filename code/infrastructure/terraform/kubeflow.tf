@@ -11,7 +11,7 @@ resource "null_resource" "kubeflow" {
       kubectl apply -k common/istio-1-17/istio-namespace/base
       kubectl apply -k common/istio-1-17/istio-install/base
     EOT
-    working_dir = "${path.module}/kubeflow_manifests"
+    working_dir = path.module
   }
 
   provisioner "local-exec" {
