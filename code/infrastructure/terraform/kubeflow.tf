@@ -12,16 +12,49 @@ resource "null_resource" "kubeflow" {
 
   provisioner "local-exec" {
     command = <<-EOT
-      while ! kubectl apply -k example; do echo "Retrying to apply resources"; sleep 10; done
+      kubectl apply -k common/cert-manager/cert-manager/base
+      kubectl wait --for=condition=ready pod -l 'app in (cert-manager,webhook)' --timeout=180s -n cert-manager
+      kubectl apply -k common/cert-manager/kubeflow-issuer/base
     EOT
     working_dir = var.kubeflow_repo_path
   }
 
   provisioner "local-exec" {
-    when = destroy
     command = <<-EOT
-      cd ./.terraform/modules/kubeflow_manifests
-      while ! kubectl delete -k example; do echo "Retrying to apply resources"; sleep 10; done
+      kubectl apply -k common/istio-1-17/istio-crds/base
+      kubectl apply -k common/istio-1-17/istio-namespace/base
+      kubectl apply -k common/istio-1-17/istio-install/base
     EOT
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k common/kubeflow-namespace/base"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k common/istio-1-17/kubeflow-istio-resources/base"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k common/kubeflow-roles/base"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k common/oidc-client/oidc-authservice/base"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k apps/profiles/upstream/overlays/kubeflow"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl apply -k apps/pipeline/upstream/env/cert-manager/platform-agnostic-multi-user"
+    working_dir = var.kubeflow_repo_path
   }
 }
