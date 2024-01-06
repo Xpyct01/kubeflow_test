@@ -16,4 +16,12 @@ resource "null_resource" "kubeflow" {
     EOT
     working_dir = var.kubeflow_repo_path
   }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = <<-EOT
+      while ! kubectl delete -k example; do echo "Retrying to apply resources"; sleep 10; done
+    EOT
+    working_dir = var.kubeflow_repo_path
+  }
 }
