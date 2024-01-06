@@ -9,6 +9,16 @@ variable "kubeflow_repo_path" {
 
 resource "null_resource" "kubeflow" {
   depends_on = [module.kubeflow_manifests, kubernetes_namespace.namespace]
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      kubectl apply -k common/cert-manager/cert-manager/base
+      kubectl wait --for=condition=ready pod -l 'app in (cert-manager,webhook)' --timeout=180s -n cert-manager
+      kubectl apply -k common/cert-manager/kubeflow-issuer/base
+    EOT
+    working_dir = var.kubeflow_repo_path
+  }
+
   provisioner "local-exec" {
     command = <<-EOT
       kubectl apply -k common/istio-1-17/istio-crds/base
