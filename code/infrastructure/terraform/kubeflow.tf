@@ -11,7 +11,9 @@ resource "null_resource" "kubeflow" {
   depends_on = [module.kubeflow_manifests, kubernetes_namespace.namespace]
 
   provisioner "local-exec" {
-    command = 'while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done'
+    command = <<-EOT
+      while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+    EOT
     working_dir = var.kubeflow_repo_path
   }
 }
