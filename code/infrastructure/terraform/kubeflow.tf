@@ -19,6 +19,11 @@ resource "null_resource" "kubeflow" {
   }
 
   provisioner "local-exec" {
+    command = "kubectl apply -k common/kubeflow-namespace/base"
+    working_dir = var.kubeflow_repo_path
+  }
+
+  provisioner "local-exec" {
     command = "kubectl apply -k common/istio-1-17/kubeflow-istio-resources/base"
     working_dir = var.kubeflow_repo_path
   }
