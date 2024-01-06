@@ -1,6 +1,6 @@
 # set up kubeflow
 module "kubeflow_manifests" {
-  source = "github.com/kubeflow//manifests"
+  source = "github.com/kubeflow/manifests"
 }
 
 resource "null_resource" "kubeflow" {
