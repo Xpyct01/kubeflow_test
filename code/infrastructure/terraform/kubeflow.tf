@@ -8,7 +8,7 @@ variable "kubeflow_repo_path" {
 }
 
 resource "null_resource" "kubeflow" {
-  depends_on = [module.kubeflow_manifests, kubernetes_namespace.namespace]
+  depends_on = [module.kubeflow_manifests]
 
   provisioner "local-exec" {
     command = <<-EOT
