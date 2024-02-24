@@ -1,4 +1,4 @@
-resource "azurerm_kubernetes_cluster" "default" {
+resource "azurerm_kubernetes_cluster" "cluster" {
   name                = "kubeflow-test-aks"
   location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
@@ -25,9 +25,4 @@ resource "azurerm_kubernetes_cluster" "default" {
   tags = {
     environment = "Dev"
   }
-}
-
-output "kube_config" {
-  value = azurerm_kubernetes_cluster.default.kube_config_raw
-  sensitive = true
 }
