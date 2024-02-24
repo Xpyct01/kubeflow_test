@@ -9,7 +9,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     name            = "default"
     min_count = 1
     max_count = 5
-    node_count      = 3
     vm_size         = "Standard_A2m_v2"
     os_disk_size_gb = 30
     enable_auto_scaling = true
