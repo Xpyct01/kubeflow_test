@@ -1,1 +1,3 @@
-variable "kube_config" {}
+variable "cluster_name" {}
+
+variable "resource_group_name" {}
