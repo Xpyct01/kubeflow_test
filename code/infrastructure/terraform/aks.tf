@@ -1,6 +1,10 @@
+resource "local_file" "kubeconfig" {
+  filename     = "kubeconfig"
+  content      = module.aks.kube_config
+}
+
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "minikube"
+  config_path    = local_file.kubeconfig.filename
 }
 
 module "aks" {

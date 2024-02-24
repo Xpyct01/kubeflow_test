@@ -6,15 +6,6 @@ variable "kubeflow_manifests_path" {
   default = "./.terraform/modules/kubeflow_manifests/manifests"
 }
 
-resource "local_file" "kubeconfig" {
-  filename     = "kubeconfig"
-  content      = var.kube_config
-}
-
-provider "kubectl" {
-  config_path = local_file.kubeconfig.filename
-}
-
 resource "null_resource" "kubeflow" {
   depends_on = [module.kubeflow_manifests]
 
