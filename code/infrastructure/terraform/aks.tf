@@ -1,8 +1,3 @@
-
-provider "kubernetes" {
-  config_path    = local_file.kubeconfig.filename
-}
-
 module "aks" {
   source = "./modules/aks"
   aks_service_principal_app_id        = var.aks_service_principal_app_id
