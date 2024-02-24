@@ -11,8 +11,12 @@ resource "local_file" "kubeconfig" {
   content      = var.kube_config
 }
 
+provider "kubectl" {
+  config_path = local_file.kubeconfig.filename
+}
+
 resource "null_resource" "kubeflow" {
-  depends_on = [module.kubeflow_manifests, local_file.kubeconfig]
+  depends_on = [module.kubeflow_manifests]
 
   provisioner "local-exec" {
     command = "while ! kubectl apply -k vanilla; do echo 'Retrying to apply resources'; sleep 10; done"
