@@ -15,7 +15,7 @@ resource "null_resource" "kubeflow" {
   depends_on = [module.kubeflow_manifests, local_file.kubeconfig.filename]
 
   provisioner "local-exec" {
-    command = "export KUBECONFIG=$PWD/kubeconfig"
+    command = "export KUBECONFIG=$PWD/${local_file.kubeconfig.filename}"
   }
 
   provisioner "local-exec" {
