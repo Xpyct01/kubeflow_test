@@ -7,7 +7,7 @@ variable "kubeflow_manifests_path" {
 }
 
 resource "local_file" "kubeconfig" {
-  filename     = "kubeconfig"
+  filename     = "${var.kubeflow_manifests_path}/kubeconfig"
   content      = var.kube_config
 }
 
