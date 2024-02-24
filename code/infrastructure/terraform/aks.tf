@@ -1,7 +1,3 @@
-resource "local_file" "kubeconfig" {
-  filename     = "kubeconfig"
-  content      = module.aks.kube_config
-}
 
 provider "kubernetes" {
   config_path    = local_file.kubeconfig.filename

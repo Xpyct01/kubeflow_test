@@ -6,8 +6,17 @@ variable "kubeflow_manifests_path" {
   default = "./.terraform/modules/kubeflow_manifests/manifests"
 }
 
+resource "local_file" "kubeconfig" {
+  filename     = "kubeconfig"
+  content      = var.kube_config
+}
+
 resource "null_resource" "kubeflow" {
-  depends_on = [module.kubeflow_manifests]
+  depends_on = [module.kubeflow_manifests, local_file.kubeconfig]
+
+  provisioner "local-exec" {
+    command = "export KUBECONFIG=./kubeconfig"
+  }
 
   provisioner "local-exec" {
     command = "while ! kubectl apply -k vanilla; do echo 'Retrying to apply resources'; sleep 10; done"
