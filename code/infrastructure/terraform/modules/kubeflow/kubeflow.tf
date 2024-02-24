@@ -6,11 +6,16 @@ variable "kubeflow_manifests_path" {
   default = "./.terraform/modules/kubeflow_manifests/manifests"
 }
 
+resource "local_file" "kubeconfig" {
+  filename     = "kubeconfig"
+  content      = var.kubeconfig
+}
+
 resource "null_resource" "kubeflow" {
   depends_on = [module.kubeflow_manifests]
 
   provisioner "local-exec" {
-    command = "az aks get-credentials --resource-group ${var.resource_group_name} --name ${var.cluster_name} --overwrite-existing"
+    command = "export KUBECONFIG=./kubeconfig"
   }
 
   provisioner "local-exec" {
