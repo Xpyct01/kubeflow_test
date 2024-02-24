@@ -1,13 +1,19 @@
 terraform {
   required_providers {
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-      version = "2.17.0"
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "3.67.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "StorageAccount-ResourceGroup"
+    storage_account_name = var.storage_account_name
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+  }
+  required_version = ">= 0.14"
 }
 
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "minikube"
+provider "azurerm" {
+  features {}
 }
