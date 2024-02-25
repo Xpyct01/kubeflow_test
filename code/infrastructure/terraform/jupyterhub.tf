@@ -1,11 +1,9 @@
-resource "local_file" "kubeconfig" {
-  filename     = "kubeconfig"
-  content      = module.aks.kubeconfig
-}
-
 provider "helm" {
   kubernetes {
-    config_path = local_file.kubeconfig.filename
+    host                   = module.aks.kubeconfig.0.host
+    client_certificate     = base64decode(module.aks.kubeconfig.0.client_certificate)
+    client_key             = base64decode(module.aks.kubeconfig.0.client_key)
+    cluster_ca_certificate = base64decode(module.aks.kubeconfig.0.cluster_ca_certificate)
   }
 }
 
