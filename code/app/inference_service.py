@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from code.database.utils.HistoryBaseWrapper import HistoryBaseWrapper
-from code.database.utils.UserBaseWrapper import UserBaseWrapper
-from code.database.urils.VectorBaseWrapper import VectorBaseWrapper
-from code.ml.llm.core import LLMService
-from code.ml.ocr.core import OCRService
-from code.ml.rag.core import RagService
-from code.ml.embedding.core import EmbeddingService
+from code.data_loading.HistoryBaseWrapper import HistoryBaseWrapper
+from code.data_loading.UserBaseWrapper import UserBaseWrapper
+from code.data_loading.VectorBaseWrapper import VectorBaseWrapper
+from code.ml.llm_service import LLMService
+from code.ml.ocr_service import OCRService
+from code.ml.rag_service import RagService
+from code.ml.embedding_service import EmbeddingService
 
 
 app = FastAPI()
