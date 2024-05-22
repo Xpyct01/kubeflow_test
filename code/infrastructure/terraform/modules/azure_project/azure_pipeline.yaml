@@ -8,7 +8,7 @@ variables:
   dockerRegistryServiceConnection: '88c65941-e6fa-4fe3-98b6-48b16bc27c9a'
   imageRepository: 'pythonazuredevopscontainerized'
   containerRegistry: 'ansalemocontainerregistry.azurecr.io'
-  dockerfilePath: 'code/deployment/Dockerfile'
+  dockerfilePath: 'code/app/Dockerfile'
   tag: '$(Build.BuildId)'
   webApp: 'Python-AzureDevOps-Containerized'
   azureSubscription: 'Ansalemo(4388fa06-bf66-4497-82c2-991ba75ecb97)'
