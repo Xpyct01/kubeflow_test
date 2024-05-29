@@ -1,5 +1,5 @@
-module "flask_app" {
-  source = "flask_app"
+module "fast_api" {
+  source = "fast_api"
   depends_on = [kubernetes_namespace.namespace]
 }
 
