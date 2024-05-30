@@ -54,5 +54,5 @@ async def send_message(doc_id: str, message: str):
     message_history = history_base_wrapper.get_doc_history(doc_id)
     retriever = vector_base_wrapper.get_retriever(doc_id)
     rag_chain = rag_service.get_rag_chain(retriever, message_history)
-    rag_response = rag_chain.get_rag_response(message)
+    rag_response = rag_service.get_rag_response(rag_chain, message)
     return {"message": rag_response}

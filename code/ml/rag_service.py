@@ -58,9 +58,8 @@ class RagService:
         )
         return conversational_rag_chain
 
-    def get_rag_response(self, conversational_rag_chain, doc_id, message):
+    def get_rag_response(self, conversational_rag_chain, message):
         rag_response = conversational_rag_chain.invoke(
-            {"input": message},
-            config={"configurable": {"doc_id": doc_id}},
+            {"input": message}
         )["answer"]
         return rag_response
