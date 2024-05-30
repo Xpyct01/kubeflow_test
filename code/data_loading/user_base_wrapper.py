@@ -2,6 +2,9 @@ from typing import List
 
 
 class UserBaseWrapper:
+    def __init__(self):
+        pass
+
     def create_new_user(self) -> None:
         last_user_id = ...
         new_user_id = last_user_id + 1

@@ -2,6 +2,9 @@ from typing import List
 
 
 class HistoryBaseWrapper:
+    def __init__(self):
+        pass
+
     def create_new_doc_history(self, user_id: int, title: str, content: str) -> None:
         last_doc_id = ...
         new_doc_id = last_doc_id + 1
