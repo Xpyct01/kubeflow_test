@@ -1,21 +1,10 @@
-from langchain_chroma import Chroma
-import chromadb
-from langchain_community.embeddings.sentence_transformer import (
-    SentenceTransformerEmbeddings,
-)
 from langchain_text_splitters import CharacterTextSplitter
+from core.providers.chroma_provider import ChromaProvider
 
 
 class VectorBaseWrapper:
-    def __init__(self):
-        persistent_client = chromadb.PersistentClient()
-        persistent_client.get_or_create_collection("collection_name")
-        embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-        self.db = Chroma(
-            client=persistent_client,
-            collection_name="collection_name",
-            embedding_function=embedding_function,
-        )
+    def __init__(self, provider: ChromaProvider):
+        self.session = provider.get_session()
 
     def insert_doc_info(self, doc_content: list) -> None:
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)

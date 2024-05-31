@@ -1,19 +1,22 @@
 from typing import List
+from core.providers.mongo_provider import MongoProvider
 
 
 class HistoryBaseWrapper:
-    def __init__(self):
-        pass
+    def __init__(self, provider: MongoProvider):
+        self.session = provider.get_session()
 
-    def create_new_doc_history(self, user_id: int, title: str, content: str) -> None:
-        last_doc_id = ...
-        new_doc_id = last_doc_id + 1
+    def create_new_doc_history(self, title: str) -> None:
+        self.session.insert_one({"title": title, "message_history": []})
 
     def delete_doc(self, doc_id: int) -> None:
-        pass
+        self.session.delete_one({"_id": doc_id})
 
     def get_doc_history(self, doc_id: int) -> List[str]:
-        pass
+        history = self.session.find_one({"_id": doc_id})
+        return history["message_history"]
 
     def update_history(self, doc_id: int, message: str) -> None:
-        pass
+        history = self.get_doc_history(doc_id)
+        history.append(message)
+        self.session.update_one({"_id": doc_id}, {"$set": {"message_history": history}})

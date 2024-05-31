@@ -1,15 +1,19 @@
 from fastapi import FastAPI
-from core.data_loading.history_base_wrapper import HistoryBaseWrapper
-from core.data_loading.user_base_wrapper import UserBaseWrapper
+from app.core.data_loading.history_base_wrapper import HistoryBaseWrapper
+from app.core.data_loading.user_base_wrapper import UserBaseWrapper
 from core.data_loading.vector_base_wrapper import VectorBaseWrapper
 from ml.ocr_service import OCRService
 from ml.rag_service import RagService
+from core.providers.postgres_provider import PostgresProvider
+from core.providers.chroma_provider import ChromaProvider
+from core.providers.mongo_provider import MongoProvider
+from core.config import CONFIG
 
 
 app = FastAPI()
-history_base_wrapper = HistoryBaseWrapper()
-user_base_wrapper = UserBaseWrapper()
-vector_base_wrapper = VectorBaseWrapper()
+history_base_wrapper = HistoryBaseWrapper(MongoProvider(CONFIG))
+user_base_wrapper = UserBaseWrapper(PostgresProvider(CONFIG))
+vector_base_wrapper = VectorBaseWrapper(ChromaProvider())
 ocr_service = OCRService()
 rag_service = RagService()
 
@@ -43,7 +47,7 @@ async def delete_doc(user_id: int):
 
 @app.get("/get_user_docs")
 async def get_user_docs(user_id: int):
-    history_base_wrapper.get_user_docs(user_id)
+    user_base_wrapper.get_user_docs(user_id)
     return {"message": "Hello World"}
 
 
@@ -51,6 +55,6 @@ async def get_user_docs(user_id: int):
 async def send_message(doc_id: str, message: str):
     message_history = history_base_wrapper.get_doc_history(doc_id)
     retriever = vector_base_wrapper.get_retriever(doc_id)
-    rag_chain = rag_service.get_rag_chain(retriever, message_history)
-    rag_response = rag_service.get_rag_response(rag_chain, message)
+    conversational_rag_chain = rag_service.get_conversational_rag_chain(retriever, message_history)
+    rag_response = rag_service.get_rag_response(conversational_rag_chain, message)
     return {"message": rag_response}
