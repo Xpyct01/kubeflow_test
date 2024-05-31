@@ -8,5 +8,5 @@ provider "helm" {
 }
 
 module "jupyterhub" {
-  source = "./modules/jupyterhub"
+  source = "modules/jupyterhub"
 }

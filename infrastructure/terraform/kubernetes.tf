@@ -6,5 +6,5 @@ provider "kubernetes" {
 }
 
 module "kubernetes" {
-  source = "./modules/kubernetes"
+  source = "modules/kubernetes"
 }

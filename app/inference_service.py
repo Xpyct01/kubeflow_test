@@ -1,10 +1,9 @@
 from fastapi import FastAPI
-from code.data_loading.history_base_rapper import HistoryBaseWrapper
-from code.data_loading.user_base_wrapper import UserBaseWrapper
-from code.data_loading.vector_base_wrapper import VectorBaseWrapper
-from code.ml.ocr_service import OCRService
-from code.ml.rag_service import RagService
-from code.ml.embedding_service import EmbeddingService
+from core.data_loading.history_base_wrapper import HistoryBaseWrapper
+from core.data_loading.user_base_wrapper import UserBaseWrapper
+from core.data_loading.vector_base_wrapper import VectorBaseWrapper
+from ml.ocr_service import OCRService
+from ml.rag_service import RagService
 
 
 app = FastAPI()
@@ -13,12 +12,11 @@ user_base_wrapper = UserBaseWrapper()
 vector_base_wrapper = VectorBaseWrapper()
 ocr_service = OCRService()
 rag_service = RagService()
-embedding_service = EmbeddingService()
 
 
 @app.post("/new_user")
 async def new_user():
-    user_base_wrapper.new_user()
+    user_base_wrapper.create_new_user()
     return {"message": "Hello World"}
 
 
