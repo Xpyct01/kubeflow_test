@@ -1,0 +1,52 @@
+trigger:
+  - main
+
+resources:
+  - repo: self
+
+variables:
+  dockerRegistryServiceConnection: '88c65941-e6fa-4fe3-98b6-48b16bc27c9a'
+  imageRepository: 'pythonazuredevopscontainerized'
+  containerRegistry: 'ansalemocontainerregistry.azurecr.io'
+  dockerfilePath: 'code/app/Dockerfile'
+  tag: '$(Build.BuildId)'
+  webApp: 'Python-AzureDevOps-Containerized'
+  azureSubscription: 'Ansalemo(4388fa06-bf66-4497-82c2-991ba75ecb97)'
+
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build job
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: Docker@2
+            displayName: Build and push an image to container registry
+            inputs:
+              command: buildAndPush
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              containerRegistry: $(dockerRegistryServiceConnection)
+              tags: |
+                $(tag)
+
+  - stage: Deploy
+    displayName: Azure App Service Deploy
+    jobs:
+      - job: Deploy
+        displayName: Deploy
+        steps:
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Ansalemo(4388fa06-bf66-4497-82c2-991ba75ecb97)'
+              appType: 'webAppContainer'
+              AppSettings: '-WEBSITES_PORT 8000'
+              WebAppName: $(webApp)
+              DockerNamespace: $(containerRegistry)
+              DockerRepository: $(imageRepository)
+              DockerImageTag: $(tag)
