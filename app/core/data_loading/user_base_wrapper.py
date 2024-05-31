@@ -6,8 +6,8 @@ class UserBaseWrapper:
     def __init__(self, provider: PostgresProvider):
         self.session = provider.get_session()
 
-    def create_new_user(self, data):
-        new_log = User(type=data['type'])
+    def create_new_user(self, user_type: str):
+        new_log = User(type=user_type)
         self.session.add(new_log)
         self.session.commit()
         return "success"
@@ -20,6 +20,12 @@ class UserBaseWrapper:
 
     def delete_user(self, user_id: int) -> str:
         user = self.session.query(User).filter_by(id=user_id).one()
+        self.session.delete(user)
+        self.session.commit()
+        return "success"
+
+    def delete_document(self, document_id: int) -> str:
+        user = self.session.query(Document).filter_by(id=document_id).one()
         self.session.delete(user)
         self.session.commit()
         return "success"

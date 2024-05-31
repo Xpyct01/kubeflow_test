@@ -19,40 +19,49 @@ rag_service = RagService()
 
 
 @app.post("/new_user")
-async def new_user():
-    user_base_wrapper.create_new_user()
-    return {"message": "Hello World"}
+async def new_user(data: dict) -> dict:
+    user_type = data["type"]
+    user_base_wrapper.create_new_user(user_type)
+    return {"message": "success"}
 
 
 @app.delete("/delete_user")
-async def delete_user(user_id: int):
+async def delete_user(data: dict) -> dict:
+    user_id = data["user_id"]
     user_base_wrapper.delete_user(user_id)
-    return {"message": "Hello World"}
+    return {"message": "success"}
 
 
 @app.post("/new_doc")
-async def new_doc(doc):
-    doc_content = ocr_service.get_doc_content(doc)
-    history_base_wrapper.create_new_doc_history()
+async def new_doc(data: dict) -> dict:
+    images_list = data["images_list"]
+    doc_title = data["doc_title"]
+    doc_content = ocr_service.get_doc_content(images_list)
+    history_base_wrapper.create_new_doc_history(doc_title)
     vector_base_wrapper.insert_doc_info(doc_content)
-    return {"message": "Hello World"}
+    return {"message": "success"}
 
 
 @app.delete("/delete_doc")
-async def delete_doc(user_id: int):
-    history_base_wrapper.delete_doc(user_id)
-    vector_base_wrapper.delete_doc(user_id)
-    return {"message": "Hello World"}
+async def delete_doc(data: dict) -> dict:
+    doc_id = data["doc_id"]
+    user_base_wrapper.delete_document(doc_id)
+    history_base_wrapper.delete_doc(doc_id)
+    vector_base_wrapper.delete_doc(doc_id)
+    return {"message": "success"}
 
 
 @app.get("/get_user_docs")
-async def get_user_docs(user_id: int):
+async def get_user_docs(data: dict) -> dict:
+    user_id = data["user_id"]
     user_base_wrapper.get_user_docs(user_id)
-    return {"message": "Hello World"}
+    return {"message": "success"}
 
 
 @app.post("/send_message")
-async def send_message(doc_id: str, message: str):
+async def send_message(data: dict) -> dict:
+    doc_id = data["doc_id"]
+    message = data["message"]
     message_history = history_base_wrapper.get_doc_history(doc_id)
     retriever = vector_base_wrapper.get_retriever(doc_id)
     conversational_rag_chain = rag_service.get_conversational_rag_chain(retriever, message_history)
